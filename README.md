@@ -33,14 +33,13 @@ awal
 		
 		
 ##entreprise (B To B : *Business to Business => entreprise qui s'occupe de la clientèle* ): 
->1. Vendor :
-- Marque blanche, marque grise : client the phone house ou PME peuvent réparer via ces enseignes
-- le client va dans une entreprise ou dans la boutique(appareils transportable), l'appareils sera envoyé a partir de la boutique et le retour sera à l'adresse de la boutique.
-- faire croire au client que le paiement se fait par la boutique (exemple: on met le logo "Boulanger", ou une interface de l'entreprise)
-- "sous traitance"
+>* Marque blanche, marque grise : client the phone house ou PME peuvent réparer via ces enseignes
+* le client va dans une entreprise ou dans la boutique(appareils transportable), l'appareils sera envoyé a partir de la boutique et le retour sera à l'adresse de la boutique.
+* faire croire au client que le paiement se fait par la boutique (exemple: on met le logo "Boulanger", ou une interface de l'entreprise)
+* "sous traitance"
 >
-	- Etape intermédiaire:
-		- possibilité de garantir l'appareils ou de faire une extension de garantie sur l'appareils.
+* Etape intermédiaire:
+	- possibilité de garantir l'appareils ou de faire une extension de garantie sur l'appareils.
 
 ##entreprise (B to B to B: Business to Business to Business => entreprise demande à l'entreprise de réparée): 
 >* plusieurs réparateurs ou un réparateur(Siemens...) 
