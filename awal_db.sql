@@ -142,10 +142,12 @@ DROP TABLE IF EXISTS `deviceinsurancemodel`;
 CREATE TABLE `deviceinsurancemodel` (
   `id_deviceinsurancemodel` int(11) NOT NULL AUTO_INCREMENT,
   `id_modele` int(11) NOT NULL,
-  `name` varchar(45) DEFAULT NULL,
+  `name` varchar(45) NOT NULL,
   `description` varchar(45) DEFAULT NULL,
-  `duration` int(11) DEFAULT NULL,
+  `duration` int(11) NOT NULL,
+  `price` int(11) NOT NULL,
   PRIMARY KEY (`id_deviceinsurancemodel`),
+  UNIQUE KEY `id_deviceinsurancemodel_UNIQUE` (`id_deviceinsurancemodel`),
   KEY `fk_deviceinsurancemodel_model_idx` (`id_modele`),
   CONSTRAINT `fk_deviceinsurancemodel_model` FOREIGN KEY (`id_modele`) REFERENCES `modele` (`id_modele`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -314,4 +316,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-10-02 15:06:31
+-- Dump completed on 2014-10-02 15:13:31
