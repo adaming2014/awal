@@ -46,6 +46,7 @@ CREATE TABLE `admin` (
   `id_user` int(11) NOT NULL,
   PRIMARY KEY (`id_admin`),
   UNIQUE KEY `id_admin_UNIQUE` (`id_admin`),
+  UNIQUE KEY `id_user_UNIQUE` (`id_user`),
   KEY `fk_idUser_idx` (`id_user`),
   CONSTRAINT `fk_idUser` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -65,11 +66,12 @@ CREATE TABLE `client` (
   `id_user` int(11) NOT NULL,
   PRIMARY KEY (`id_client`),
   UNIQUE KEY `id_client_UNIQUE` (`id_client`),
+  UNIQUE KEY `id_user_UNIQUE` (`id_user`),
   KEY `fk_client_user_idx` (`id_user`),
   KEY `fk_client_address_idx` (`id_address`),
   CONSTRAINT `fk_client_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_client_address` FOREIGN KEY (`id_address`) REFERENCES `address` (`id_address`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -82,8 +84,8 @@ DROP TABLE IF EXISTS `device`;
 CREATE TABLE `device` (
   `id_device` int(11) NOT NULL AUTO_INCREMENT,
   `description` varchar(45) DEFAULT NULL,
-  `id_modele` int(11) DEFAULT NULL,
-  `id_client` int(11) DEFAULT NULL,
+  `id_modele` int(11) NOT NULL,
+  `id_client` int(11) NOT NULL,
   PRIMARY KEY (`id_device`),
   UNIQUE KEY `id_device_UNIQUE` (`id_device`),
   KEY `fk_device_modele_idx` (`id_modele`),
@@ -102,13 +104,32 @@ DROP TABLE IF EXISTS `deviceinsurance`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `deviceinsurance` (
   `id_deviceInsurance` int(11) NOT NULL,
-  `beginDate` date DEFAULT NULL,
-  `endDate` date DEFAULT NULL,
-  `id_device` int(11) DEFAULT NULL,
+  `beginDate` date NOT NULL,
+  `endDate` date NOT NULL,
+  `id_device` int(11) NOT NULL,
   `description` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id_deviceInsurance`),
   KEY `fk_deviceInsurance_device_idx` (`id_device`),
   CONSTRAINT `fk_deviceInsurance_device` FOREIGN KEY (`id_device`) REFERENCES `device` (`id_device`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `deviceinsurancemodel`
+--
+
+DROP TABLE IF EXISTS `deviceinsurancemodel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `deviceinsurancemodel` (
+  `id_deviceinsurancemodel` int(11) NOT NULL AUTO_INCREMENT,
+  `id_modele` int(11) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `description` varchar(45) DEFAULT NULL,
+  `duration` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_deviceinsurancemodel`),
+  KEY `fk_deviceinsurancemodel_model_idx` (`id_modele`),
+  CONSTRAINT `fk_deviceinsurancemodel_model` FOREIGN KEY (`id_modele`) REFERENCES `modele` (`id_modele`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -121,16 +142,16 @@ DROP TABLE IF EXISTS `devicerepair`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `devicerepair` (
   `id_deviceRepair` int(11) NOT NULL AUTO_INCREMENT,
-  `id_repairer` int(11) DEFAULT NULL,
-  `id_modelpackage` int(11) DEFAULT NULL,
+  `id_repairer` int(11) NOT NULL,
+  `id_modelpackage` int(11) NOT NULL,
   `description` varchar(45) DEFAULT NULL,
-  `price` int(11) DEFAULT NULL,
-  `state` enum('CREATE','IN_REPAIR','REPAIR','CLOSED') DEFAULT NULL,
-  `date_creation` date DEFAULT NULL,
+  `price` int(11) NOT NULL,
+  `state` enum('CREATE','IN_REPAIR','REPAIR','CLOSED') DEFAULT 'CREATE',
+  `date_creation` date NOT NULL,
   `date_in_repair` date DEFAULT NULL,
   `date_repair` date DEFAULT NULL,
   `date_closed` date DEFAULT NULL,
-  `id_device` int(11) DEFAULT NULL,
+  `id_device` int(11) NOT NULL,
   PRIMARY KEY (`id_deviceRepair`),
   UNIQUE KEY `id_deviceRepair_UNIQUE` (`id_deviceRepair`),
   KEY `fk_devicerepair_modelpackage_idx` (`id_modelpackage`),
@@ -151,7 +172,7 @@ DROP TABLE IF EXISTS `firm`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `firm` (
   `id_firm` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) DEFAULT NULL,
+  `name` varchar(45) NOT NULL,
   `phone` varchar(45) DEFAULT NULL,
   `id_address` int(11) DEFAULT NULL,
   `logo_path` varchar(45) DEFAULT NULL,
@@ -191,10 +212,10 @@ DROP TABLE IF EXISTS `modelpackage`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `modelpackage` (
   `id_modelpackage` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) DEFAULT NULL,
+  `name` varchar(45) NOT NULL,
   `description` varchar(45) DEFAULT NULL,
-  `price` varchar(45) DEFAULT NULL,
-  `id_modele` int(11) DEFAULT NULL,
+  `price` varchar(45) NOT NULL,
+  `id_modele` int(11) NOT NULL,
   PRIMARY KEY (`id_modelpackage`),
   UNIQUE KEY `id_devicePackage_UNIQUE` (`id_modelpackage`),
   KEY `fk_devicePackage_modele_idx` (`id_modele`),
@@ -218,6 +239,7 @@ CREATE TABLE `repairer` (
   `id_user` int(11) NOT NULL,
   PRIMARY KEY (`id_repairer`),
   UNIQUE KEY `id_repairer_UNIQUE` (`id_repairer`),
+  UNIQUE KEY `id_user_UNIQUE` (`id_user`),
   KEY `fk_repairer_repaireraddress_idx` (`id_address`),
   KEY `fk_isUser_idx` (`id_user`),
   KEY `fk_repairer_user_idx` (`id_user`),
@@ -239,6 +261,7 @@ CREATE TABLE `reseller` (
   `id_firm` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_seller`),
   UNIQUE KEY `id_seller_UNIQUE` (`id_seller`),
+  UNIQUE KEY `id_user_UNIQUE` (`id_user`),
   KEY `fk_seller_user_idx` (`id_user`),
   KEY `fk_seller_firm_idx` (`id_firm`),
   CONSTRAINT `fk_seller_firm` FOREIGN KEY (`id_firm`) REFERENCES `firm` (`id_firm`) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -263,7 +286,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `id_user_UNIQUE` (`id_user`),
   UNIQUE KEY `mail_UNIQUE` (`mail`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -275,4 +298,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-10-02 10:35:01
+-- Dump completed on 2014-10-02 13:17:53
