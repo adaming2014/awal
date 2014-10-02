@@ -71,7 +71,25 @@ CREATE TABLE `client` (
   KEY `fk_client_address_idx` (`id_address`),
   CONSTRAINT `fk_client_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_client_address` FOREIGN KEY (`id_address`) REFERENCES `address` (`id_address`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `competence`
+--
+
+DROP TABLE IF EXISTS `competence`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `competence` (
+  `id_competence` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_repairer` int(10) NOT NULL,
+  `type` varchar(45) NOT NULL,
+  PRIMARY KEY (`id_competence`),
+  UNIQUE KEY `id_competence_UNIQUE` (`id_competence`),
+  KEY `fk_competence_repairer_idx` (`id_repairer`),
+  CONSTRAINT `fk_competence_repairer` FOREIGN KEY (`id_repairer`) REFERENCES `repairer` (`id_repairer`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -235,15 +253,15 @@ CREATE TABLE `repairer` (
   `enterprise` varchar(45) DEFAULT NULL,
   `competence` enum('PHONE','ELECTROMENAGER','COMPUTER','MECHANICAL','OTHER') DEFAULT NULL,
   `available` enum('AVAILABLE','NOT_AVAILABLE') DEFAULT NULL,
-  `id_address` int(11) DEFAULT NULL,
+  `id_firm` int(11) DEFAULT NULL,
   `id_user` int(11) NOT NULL,
   PRIMARY KEY (`id_repairer`),
   UNIQUE KEY `id_repairer_UNIQUE` (`id_repairer`),
   UNIQUE KEY `id_user_UNIQUE` (`id_user`),
-  KEY `fk_repairer_repaireraddress_idx` (`id_address`),
   KEY `fk_isUser_idx` (`id_user`),
   KEY `fk_repairer_user_idx` (`id_user`),
-  CONSTRAINT `fk_repairer_address` FOREIGN KEY (`id_address`) REFERENCES `address` (`id_address`) ON DELETE SET NULL ON UPDATE CASCADE,
+  KEY `fk_repairer_firm_idx` (`id_firm`),
+  CONSTRAINT `fk_repairer_firm` FOREIGN KEY (`id_firm`) REFERENCES `firm` (`id_firm`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_repairer_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -286,7 +304,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `id_user_UNIQUE` (`id_user`),
   UNIQUE KEY `mail_UNIQUE` (`mail`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -298,4 +316,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-10-02 13:17:53
+-- Dump completed on 2014-10-02 14:39:19
