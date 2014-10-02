@@ -250,8 +250,7 @@ DROP TABLE IF EXISTS `repairer`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `repairer` (
   `id_repairer` int(11) NOT NULL AUTO_INCREMENT,
-  `competence` enum('PHONE','ELECTROMENAGER','COMPUTER','MECHANICAL','OTHER') DEFAULT NULL,
-  `available` enum('AVAILABLE','NOT_AVAILABLE') DEFAULT NULL,
+  `available` enum('AVAILABLE','NOT_AVAILABLE') NOT NULL,
   `id_firm` int(11) DEFAULT NULL,
   `id_user` int(11) NOT NULL,
   PRIMARY KEY (`id_repairer`),
@@ -315,4 +314,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-10-02 14:53:34
+-- Dump completed on 2014-10-02 15:06:31
