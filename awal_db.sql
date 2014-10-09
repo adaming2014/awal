@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Mer 08 Octobre 2014 à 09:50
+-- Généré le :  Jeu 09 Octobre 2014 à 17:03
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -33,15 +33,19 @@ CREATE TABLE IF NOT EXISTS `address` (
   `postcode` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id_address`),
   UNIQUE KEY `id_address_UNIQUE` (`id_address`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
 -- Contenu de la table `address`
 --
 
 INSERT INTO `address` (`id_address`, `city`, `street`, `postcode`) VALUES
-(1, 'nantes', '1,rue gigant', '44100'),
-(2, 'nantes', '1,rue charles', '44100');
+(3, NULL, NULL, NULL),
+(4, NULL, NULL, NULL),
+(5, NULL, NULL, NULL),
+(6, 'Paris', 'champ de mars', '75000'),
+(7, 'NY', 'Wall street', '11111'),
+(8, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -66,23 +70,22 @@ CREATE TABLE IF NOT EXISTS `admin` (
 
 CREATE TABLE IF NOT EXISTS `client` (
   `id_client` int(11) NOT NULL AUTO_INCREMENT,
-  `id_address` int(11) DEFAULT NULL,
+  `id_address` int(11) NOT NULL,
   `numbercard` varchar(45) DEFAULT NULL,
   `id_user` int(11) NOT NULL,
+  `id_firm` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_client`),
-  UNIQUE KEY `id_client_UNIQUE` (`id_client`),
-  UNIQUE KEY `id_user_UNIQUE` (`id_user`),
   KEY `fk_client_user_idx` (`id_user`),
-  KEY `fk_client_address_idx` (`id_address`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+  KEY `fk_client_address_idx` (`id_address`),
+  KEY `fk_client_firm_idx` (`id_firm`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Contenu de la table `client`
 --
 
-INSERT INTO `client` (`id_client`, `id_address`, `numbercard`, `id_user`) VALUES
-(8, 1, '123456', 6),
-(9, NULL, NULL, 8);
+INSERT INTO `client` (`id_client`, `id_address`, `numbercard`, `id_user`, `id_firm`) VALUES
+(1, 8, NULL, 46, NULL);
 
 -- --------------------------------------------------------
 
@@ -114,17 +117,18 @@ CREATE TABLE IF NOT EXISTS `device` (
   UNIQUE KEY `id_device_UNIQUE` (`id_device`),
   KEY `fk_device_modele_idx` (`id_modele`),
   KEY `fk_device_client_idx` (`id_client`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=44 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Contenu de la table `device`
 --
 
 INSERT INTO `device` (`id_device`, `description`, `id_modele`, `id_client`) VALUES
-(29, 'myphone', 1, 8),
-(30, 'mytablette', 2, 8),
-(42, 'myphone2', 1, 8),
-(43, 'QSDFG', 2, 8);
+(1, 'mmm', 2, 1),
+(2, 'ddd', 1, 1),
+(3, '01', 1, 1),
+(4, '102', 1, 1),
+(5, '13', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -138,19 +142,11 @@ CREATE TABLE IF NOT EXISTS `deviceinsurance` (
   `id_deviceInsuranceModel` int(11) NOT NULL,
   `id_device` int(11) NOT NULL,
   `description` varchar(45) DEFAULT NULL,
+  `endDate` date DEFAULT NULL,
   PRIMARY KEY (`id_deviceInsurance`),
   KEY `fk_deviceInsurance_device_idx` (`id_device`),
   KEY `fk_deviceinsurance_deviceinsurancemodel_idx` (`id_deviceInsuranceModel`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
-
---
--- Contenu de la table `deviceinsurance`
---
-
-INSERT INTO `deviceinsurance` (`id_deviceInsurance`, `beginDate`, `id_deviceInsuranceModel`, `id_device`, `description`) VALUES
-(5, '2014-10-31', 6, 30, '01'),
-(6, '2014-10-31', 3, 42, '02'),
-(7, '2014-10-28', 4, 43, '03');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -168,7 +164,7 @@ CREATE TABLE IF NOT EXISTS `deviceinsurancemodel` (
   PRIMARY KEY (`id_deviceinsurancemodel`),
   UNIQUE KEY `id_deviceinsurancemodel_UNIQUE` (`id_deviceinsurancemodel`),
   KEY `fk_deviceinsurancemodel_model_idx` (`id_modele`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Contenu de la table `deviceinsurancemodel`
@@ -180,7 +176,8 @@ INSERT INTO `deviceinsurancemodel` (`id_deviceinsurancemodel`, `id_modele`, `nam
 (3, 1, 'insurance6', '6 month', 6, 50),
 (4, 2, 'insurance1', '1 month', 1, 10),
 (5, 2, 'insurance3', '3 month', 3, 25),
-(6, 2, 'insurance6', '6 month', 6, 50);
+(6, 2, 'insurance6', '6 month', 6, 50),
+(7, 1, 'Forfait 300', 'Forfait pour les tÃ©lÃ©phone de type Samsung', 3, 30);
 
 -- --------------------------------------------------------
 
@@ -205,16 +202,7 @@ CREATE TABLE IF NOT EXISTS `devicerepair` (
   KEY `fk_devicerepair_modelpackage_idx` (`id_modelpackage`),
   KEY `fk_devicerepair_repairer_idx` (`id_repairer`),
   KEY `fk_devicerepain_device_idx` (`id_device`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
-
---
--- Contenu de la table `devicerepair`
---
-
-INSERT INTO `devicerepair` (`id_deviceRepair`, `id_repairer`, `id_modelpackage`, `description`, `price`, `state`, `date_creation`, `date_in_repair`, `date_repair`, `date_closed`, `id_device`) VALUES
-(19, 10, 1, NULL, 90, 'CREATE', '2014-10-07', NULL, NULL, NULL, 29),
-(20, 10, 2, NULL, 90, 'CREATE', '2014-10-07', NULL, NULL, NULL, 30),
-(21, 10, 3, NULL, 50, 'CREATE', '2014-10-07', NULL, NULL, NULL, 42);
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -232,14 +220,15 @@ CREATE TABLE IF NOT EXISTS `firm` (
   PRIMARY KEY (`id_firm`),
   UNIQUE KEY `id_firm_UNIQUE` (`id_firm`),
   KEY `fk_firm_address_idx` (`id_address`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Contenu de la table `firm`
 --
 
 INSERT INTO `firm` (`id_firm`, `name`, `phone`, `id_address`, `logo_path`, `css_path`) VALUES
-(1, 'evolution-consulting', '02123456', 2, NULL, NULL);
+(2, 'Orange', '0101010101', 6, 'ballon.png', 'themerouge.css'),
+(3, 'Oracle', '0000000000', 7, 'jouet.png', 'themreblue.css');
 
 -- --------------------------------------------------------
 
@@ -254,6 +243,7 @@ CREATE TABLE IF NOT EXISTS `modele` (
   `brand` varchar(45) NOT NULL,
   `type` varchar(45) NOT NULL,
   `name` varchar(45) NOT NULL,
+  `image` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id_modele`),
   UNIQUE KEY `id_modele_UNIQUE` (`id_modele`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
@@ -262,9 +252,9 @@ CREATE TABLE IF NOT EXISTS `modele` (
 -- Contenu de la table `modele`
 --
 
-INSERT INTO `modele` (`id_modele`, `weigth`, `dimension`, `brand`, `type`, `name`) VALUES
-(1, 2, '10*10*2', 'samsung', 'phone', 'smartphone'),
-(2, 5, '10*10*10', 'samsung', 'tablette', 'smarttablette');
+INSERT INTO `modele` (`id_modele`, `weigth`, `dimension`, `brand`, `type`, `name`, `image`) VALUES
+(1, 2, '10*10*2', 'samsung', 'phone', 'smartphone', NULL),
+(2, 5, '10*10*10', 'samsung', 'tablette', 'smarttablette', NULL);
 
 -- --------------------------------------------------------
 
@@ -278,20 +268,22 @@ CREATE TABLE IF NOT EXISTS `modelpackage` (
   `description` varchar(45) DEFAULT NULL,
   `price` varchar(45) NOT NULL,
   `id_modele` int(11) NOT NULL,
+  `image` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id_modelpackage`),
   UNIQUE KEY `id_devicePackage_UNIQUE` (`id_modelpackage`),
   KEY `fk_devicePackage_modele_idx` (`id_modele`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Contenu de la table `modelpackage`
 --
 
-INSERT INTO `modelpackage` (`id_modelpackage`, `name`, `description`, `price`, `id_modele`) VALUES
-(1, 'forfait ecran cassé', 'ecran cassé', '90', 1),
-(2, 'forfait ecran cassé', 'ecran cassé', '90', 2),
-(3, 'forfait batterie ', 'batterie ', '50', 1),
-(4, 'forfait batterie ', 'batterie ', '50', 2);
+INSERT INTO `modelpackage` (`id_modelpackage`, `name`, `description`, `price`, `id_modele`, `image`) VALUES
+(1, 'forfait ecran cassÃ©', 'ecran cassÃ©', '90', 1, NULL),
+(2, 'forfait ecran cassÃ©', 'ecran cassÃ©', '90', 2, NULL),
+(3, 'forfait batterie ', 'batterie ', '50', 1, NULL),
+(4, 'forfait batterie ', 'batterie ', '50', 2, NULL),
+(5, 'Forfait 1', 'Smartphone marque samsung', '30.5', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -319,7 +311,8 @@ CREATE TABLE IF NOT EXISTS `repairer` (
 --
 
 INSERT INTO `repairer` (`id_repairer`, `available`, `id_firm`, `id_user`, `id_address`) VALUES
-(10, 'AVAILABLE', 1, 7, NULL);
+(9, 'AVAILABLE', 2, 44, NULL),
+(10, 'AVAILABLE', 3, 45, NULL);
 
 -- --------------------------------------------------------
 
@@ -354,16 +347,16 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `id_user_UNIQUE` (`id_user`),
   UNIQUE KEY `mail_UNIQUE` (`mail`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=47 ;
 
 --
 -- Contenu de la table `user`
 --
 
 INSERT INTO `user` (`id_user`, `firstname`, `lastname`, `mail`, `password`, `phone`) VALUES
-(6, 'bian', 'loic', 'bian.loic@gmail.com', '123456', '06123456'),
-(7, 'lucas', 'antoine', 'lucas.antoine@gmail.com', '123456', '06123456'),
-(8, 'mathis', 'bian', 'mathis.bian@gmail.com', '123456', NULL);
+(44, 'loic', 'bian', 'loic2@gmail.com', 'pass', NULL),
+(45, 'antoine', 'lucas', 'antoine@gmail.com', 'pass', NULL),
+(46, 'Wael', 'XXX', 'wael@gmail.com', 'pass', NULL);
 
 --
 -- Contraintes pour les tables exportées
@@ -379,8 +372,9 @@ ALTER TABLE `admin`
 -- Contraintes pour la table `client`
 --
 ALTER TABLE `client`
-  ADD CONSTRAINT `fk_client_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_client_address` FOREIGN KEY (`id_address`) REFERENCES `address` (`id_address`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_client_address` FOREIGN KEY (`id_address`) REFERENCES `address` (`id_address`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_client_firm` FOREIGN KEY (`id_firm`) REFERENCES `firm` (`id_firm`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_client_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `competence`
@@ -392,15 +386,15 @@ ALTER TABLE `competence`
 -- Contraintes pour la table `device`
 --
 ALTER TABLE `device`
-  ADD CONSTRAINT `fk_device_client` FOREIGN KEY (`id_client`) REFERENCES `client` (`id_client`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_device_modele` FOREIGN KEY (`id_modele`) REFERENCES `modele` (`id_modele`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_device_client` FOREIGN KEY (`id_client`) REFERENCES `client` (`id_client`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_device_modele` FOREIGN KEY (`id_modele`) REFERENCES `modele` (`id_modele`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `deviceinsurance`
 --
 ALTER TABLE `deviceinsurance`
-  ADD CONSTRAINT `fk_deviceInsurance_device` FOREIGN KEY (`id_device`) REFERENCES `device` (`id_device`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_deviceinsurance_deviceinsurancemodel` FOREIGN KEY (`id_deviceInsuranceModel`) REFERENCES `deviceinsurancemodel` (`id_deviceinsurancemodel`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_deviceInsurance_device` FOREIGN KEY (`id_device`) REFERENCES `device` (`id_device`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_deviceinsurance_deviceinsurancemodel` FOREIGN KEY (`id_deviceInsuranceModel`) REFERENCES `deviceinsurancemodel` (`id_deviceinsurancemodel`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `deviceinsurancemodel`
@@ -412,9 +406,9 @@ ALTER TABLE `deviceinsurancemodel`
 -- Contraintes pour la table `devicerepair`
 --
 ALTER TABLE `devicerepair`
-  ADD CONSTRAINT `fk_devicerepair_repairer` FOREIGN KEY (`id_repairer`) REFERENCES `repairer` (`id_repairer`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_devicerepain_device` FOREIGN KEY (`id_device`) REFERENCES `device` (`id_device`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_devicerepair_modelpackage` FOREIGN KEY (`id_modelpackage`) REFERENCES `modelpackage` (`id_modelpackage`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_devicerepair_modelpackage` FOREIGN KEY (`id_modelpackage`) REFERENCES `modelpackage` (`id_modelpackage`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_devicerepair_repairer` FOREIGN KEY (`id_repairer`) REFERENCES `repairer` (`id_repairer`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `firm`
